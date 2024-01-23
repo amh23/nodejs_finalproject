@@ -1,12 +1,8 @@
 const express = require("express");
-const axios = require("axios");
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
-
-const fs = require('fs/promises');
-const path = require('path');
 
 function doesExist(username) {
     let sameusername = users.filter((user) => {
@@ -15,6 +11,7 @@ function doesExist(username) {
 
     return sameusername.length > 0 ? true : false;
 }
+
 public_users.post("/register", (req, res) => {
     //Write your code here
     const username = req.body.username;
@@ -35,23 +32,13 @@ public_users.post("/register", (req, res) => {
 });
 
 // Get the book list available in the shop
-public_users.get("/", async(req, res)=>{
+public_users.get("/", function(req, res){
     //Write your code here
     try {
-        // Promise.resolve(books).then((results)=>{
-        //     return res.status(200).send(results);
-        // });    
+        Promise.resolve(books).then((results)=>{
+            return res.status(200).send(results);
+        });    
 
-        // const filePath = path.join(__dirname,'booksdb.js');
-
-        // const data = await fs.readFile(filePath, 'utf-8');
-
-        // console.log(data)
-        const filePath =path.join(__dirname,'booksdb.js');
-        const fileContent = await fs.readFile(filePath,'utf-8');
-
-        const jsonData =eval(fileContent);
-        return res.status(200).send(jsonData);
     } catch (error) {
         console.log(error);
     }
