@@ -62,39 +62,47 @@ public_users.get("/", async(req, res)=>{
 public_users.get("/isbn/:isbn", function (req, res) {
     //Write your code here
     const isbn = req.body.isbn;
-    return res.send(books[isbn]);
+    Promise.resolve(books).then((results)=>{
+            return res.status(200).send(results[isbn]);
+        });  
 });
 
 // Get book details based on author
 public_users.get("/author/:author", function (req, res) {
     //Write your code here
     const author = req.body.author;
-    const booksByAuthor = Object.entries(books).reduce(
-        (filteredBooks, [isbn, book]) => {
-            if (book.author == author) {
-                filteredBooks[isbn] = book;
-            }
-            return filteredBooks;
-        },
-        {}
-    );
-    return res.send(booksByAuthor);
+    Promise.resolve(books).then((results)=>{
+        const booksByAuthor = Object.entries(results).reduce(
+            (filteredBooks, [isbn, book]) => {
+                if (book.author == author) {
+                    filteredBooks[isbn] = book;
+                }
+                return filteredBooks;
+            },
+            {}
+        );
+        return res.send(booksByAuthor);
+    });  
+    
 });
 
 // Get all books based on title
 public_users.get("/title/:title", function (req, res) {
     //Write your code here
     const title = req.body.title;
-    const booksByTitle = Object.entries(books).reduce(
-        (filteredBooks, [isbn, book]) => {
-            if (book.title == title) {
-                filteredBooks[isbn] = book;
-            }
-            return filteredBooks;
-        },
-        {}
-    );
-    return res.send(booksByTitle);
+    Promise.resolve(books).then((results)=>{
+        const booksByTitle = Object.entries(results).reduce(
+            (filteredBooks, [isbn, book]) => {
+                if (book.title == title) {
+                    filteredBooks[isbn] = book;
+                }
+                return filteredBooks;
+            },
+            {}
+        );
+        return res.send(booksByTitle);
+    });  
+   
 });
 
 //  Get book review
